@@ -181,7 +181,160 @@ class Palette {
     }
   }
 
+  // fill a closed area after mousemove
+  fillArea(data) {
+    this.busy = true;
+    const startX = this.getCoords(data).left;
+    const startY = this.getCoords(data).top;
+    const fillColor = Palette.colorToRgba(this.currentColor);
+    const dstImg = this.ctx.getImageData(0, 0, this.scale, this.scale);
+    const dstData = dstImg.data;
+    const startPos = this.getPixelPos(startX, startY);
+    const startColor = {
+      r: dstData[startPos],
+      g: dstData[startPos + 1],
+      b: dstData[startPos + 2],
+      a: dstData[startPos + 3],
+    };
+    const todo = [[startX, startY]];
+    while (todo.length) {
+      const pos = todo.pop();
+      const x = pos[0];
+      let y = pos[1];
+      let currentPos = this.getPixelPos(x, y);
+      y += 1;
+      while ((y >= 0) && Palette.matchStartColor(dstData, currentPos, startColor)) {
+        y -= 1;
+        currentPos -= this.scale * 4;
+      }
+      currentPos += this.scale * 4;
+      let reachLeft = false;
+      let reachRight = false;
+      y -= 1;
+      while ((y < this.scale - 1) && Palette.matchStartColor(dstData, currentPos, startColor)) {
+        y += 1;
+        Palette.colorPixel(dstData, currentPos, fillColor);
+        if (x > 0) {
+          if (Palette.matchStartColor(dstData, currentPos - 4, startColor)) {
+            if (!reachLeft) {
+              todo.push([x - 1, y]);
+              reachLeft = true;
+            }
+          } else if (reachLeft) {
+            reachLeft = false;
+          }
+        }
+        if (x < this.scale - 1) {
+          if (Palette.matchStartColor(dstData, currentPos + 4, startColor)) {
+            if (!reachRight) {
+              todo.push([x + 1, y]);
+              reachRight = true;
+            }
+          } else if (reachRight) {
+            reachRight = false;
+          }
+        }
+        currentPos += this.scale * 4;
+      }
+    }
+    this.ctx.putImageData(dstImg, 0, 0);
+    return true;
+  }
 
+  // convert format color
+  static rgbToHex(data) {
+    let r = data.r.toString(16);
+    let g = data.g.toString(16);
+    let b = data.b.toString(16);
+    let a = Math.round(data.a * 255).toString(16);
+    if (r.length === 1) r = `0${r}`;
+    if (g.length === 1) g = `0${g}`;
+    if (b.length === 1) b = `0${b}`;
+    if (a.length === 1) a = `0${a}`;
+    return `#${r}${g}${b}`;
+  }
+
+  // get position in ImageData
+  getPixelPos(x, y) {
+    return (y * this.scale + x) * 4;
+  }
+
+  // return Star Color
+  static matchStartColor(data, pos, startColor) {
+    return (data[pos] === startColor.r
+      && data[pos + 1] === startColor.g
+      && data[pos + 2] === startColor.b
+      && data[pos + 3] === startColor.a);
+  }
+
+  // set pixel color
+  static colorPixel(dat, pos, color) {
+    const data = dat;
+    data[pos] = color.r || 0;
+    data[pos + 1] = color.g || 0;
+    data[pos + 2] = color.b || 0;
+    data[pos + 3] = Object.prototype.hasOwnProperty.call(color, 'a') ? color.a : 255;
+  }
+
+  // convert color format
+  fillPromise(data) {
+    const promiseFill = new Promise((resolve) => {
+      if (this.fillArea(data)) {
+        setTimeout(() => {
+          resolve();
+        }, 0);
+      }
+    });
+    promiseFill.then(() => {
+      this.busy = false;
+    });
+  }
+
+  // convert format color
+  static colorToRgba(c) {
+    let result;
+    if (c[0] === '#') {
+      const color = c.replace('#', '');
+      const bigint = parseInt(color, 16);
+      // eslint-disable-next-line no-bitwise
+      const r = (bigint >> 16) & 255;
+      // eslint-disable-next-line no-bitwise
+      const g = (bigint >> 8) & 255;
+      // eslint-disable-next-line no-bitwise
+      const b = bigint & 255;
+      result = {
+        r,
+        g,
+        b,
+        a: 255,
+      };
+    } else if (c.indexOf('rgba(') === 0) {
+      const color = c.replace('rgba(', '').replace(' ', '').replace(')', '').split(',');
+      result = {
+        r: color[0],
+        g: color[1],
+        b: color[2],
+        a: color[3] * 255,
+      };
+    } else {
+      result = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 0,
+      };
+    }
+    return result;
+  }
+
+  saveLocalStorage() {
+    if (localStorage.getItem('paletteLayout')) {
+      localStorage.removeItem('paletteLayout');
+      localStorage.setItem('paletteLayout', this.canvas.toDataURL());
+    } else {
+      localStorage.setItem('paletteLayout', this.canvas.toDataURL());
+    }
+  }
 
   cleanCanvas() {    
     this.ctx.clearRect(0, 0, this.scale, this.scale);
