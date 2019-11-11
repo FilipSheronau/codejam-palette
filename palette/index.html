@@ -18,18 +18,22 @@
     </header>    
     <main>
       <ul class="collection left-menu card">
-        <li class="collection-item" id="pensil"><i class="Tiny material-icons">create</i>Pensil</li>
-        <li class="collection-item active" id="fill"><i class="Tiny material-icons">format_color_fill</i>Fill</li>
+        <li class="collection-item active" id="pensil"><i class="Tiny material-icons">create</i>Pensil</li>
+        <li class="collection-item" id="fill"><i class="Tiny material-icons">format_color_fill</i>Fill</li>
         <li class="collection-item" id="choose-color"><i class="Tiny material-icons">colorize</i>Choose color</li>        
       </ul>
-      <ul class="collection left-bottom-menu card">          
-          <li class="collection-item" id="current-color"><i class="Tiny material-icons">fiber_manual_record</i>Current color</li>
+      <ul class="collection left-bottom-menu card">         
+          <li class="collection-item" id="current-color">
+            <input type="color" name="current-color" id="inp-color">
+            <label for="inp-color"><i class="Tiny material-icons">fiber_manual_record</i>Current color</label>
+          </li>
           <li class="collection-item" id="prev-color"><i class="Tiny material-icons">fiber_manual_record</i>Prev color</li>
-          <li class="collection-item" id="red-color"><i class="Tiny material-icons red-text">fiber_manual_record</i>Red</li>
-          <li class="collection-item" id="blue-color"><i class="Tiny material-icons blue-text text-darken-4">fiber_manual_record</i>Blue</li>
+          <li class="collection-item" id="red-color"><i class="Tiny material-icons">fiber_manual_record</i>Red</li>
+          <li class="collection-item" id="blue-color"><i class="Tiny material-icons">fiber_manual_record</i>Blue</li>
+          <li class="collection-item" id="clean"><i class="Tiny material-icons">delete</i>Clean layout</li>
         </ul>
         <div class="palete-pal card">
-          <canvas id="canvas" width="512" height="512"></canvas>
+          <canvas id="canvas" width="32" height="32"></canvas>
         </div>        
     </main>
     <footer>

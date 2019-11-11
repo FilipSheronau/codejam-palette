@@ -61,12 +61,14 @@ main {
 
 .left-menu li,
 .left-bottom-menu li,
+.left-bottom-menu label,
 .right-menu li {
   display: flex;
   align-items: center;
   line-height: 24px;
   font-weight: bold;
   color: $buttons-color;
+  font-size: 16px;
 }
 
 .left-menu li:hover,
@@ -80,7 +82,15 @@ main {
 .left-menu li i,
 .left-bottom-menu li i,
 .right-menu li i {
-  margin-right: 10px;  
+  margin-right: 10px;
+}
+
+.left-bottom-menu li:first-child {  
+    padding: 0!important; 
+}
+
+#inp-color {
+  display: none!important;
 }
 
 .no-pad {
@@ -125,4 +135,20 @@ main {
   height: 512px;  
   margin: 40px auto 0!important;
   display: block;
+}
+
+#red-color i {
+  color: #ff0000;
+}
+
+#blue-color i {
+  color: #0000ff;
+}
+
+#canvas
+{
+  image-rendering: pixelated;
+  width: 512px;
+  height: 512px;
+  // border: 1px solid #000000;
 }
