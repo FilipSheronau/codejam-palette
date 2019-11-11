@@ -254,6 +254,27 @@ class Palette {
     return `#${r}${g}${b}`;
   }
 
+  colorPicker(data) {
+    const startX = this.getCoords(data).left;
+    const startY = this.getCoords(data).top;
+    const dstImg = this.ctx.getImageData(0, 0, this.scale, this.scale);
+    const dstData = dstImg.data;
+    const startPos = this.getPixelPos(startX, startY);
+    const startColor = {
+      r: dstData[startPos],
+      g: dstData[startPos + 1],
+      b: dstData[startPos + 2],
+      a: dstData[startPos + 3],
+    };
+    const newColor = Palette.rgbToHex(startColor);
+    this.prevColor = this.currentColor;
+    this.currentColor = newColor;
+    document.querySelector('#current-color i').style.color = this.currentColor;
+    document.querySelector('#prev-color i').style.color = this.prevColor;
+    this.ctx.fillStyle = this.currentColor;
+    document.getElementById('inp-color').value = this.currentColor;
+  }
+
   // get position in ImageData
   getPixelPos(x, y) {
     return (y * this.scale + x) * 4;
