@@ -17,7 +17,15 @@ class Palette {
   // body load an other events
   bodyLoad() {
     this.createCanvas();
-    this.toggleTool(document.querySelector('#pensil'));
+    if (localStorage.getItem('state')) {
+      const state = JSON.parse(localStorage.getItem('state'));
+      this.mode = state.mode;
+      this.currentColor = state.currentColor;
+      this.prevColor = state.prevColor;
+      this.ctx.fillStyle = this.currentColor;
+      document.getElementById('inp-color').value = this.currentColor;
+    }
+    this.toggleTool(document.querySelector(`#${this.mode}`));
     document.querySelector('#current-color i').style.color = this.currentColor;
     document.querySelector('#prev-color i').style.color = this.prevColor;
     document.querySelector('.left-menu').addEventListener('mousedown', (event) => { this.toggleTool(event); });
@@ -34,7 +42,7 @@ class Palette {
         }
       } else if (this.mode === 'choose-color') {
         this.colorPicker(event);
-      }   
+      }
     });
     this.canvas.addEventListener('mouseup', (event) => { this.stopDraw(event); });
     this.canvas.addEventListener('mousemove', (event) => { this.draw(event); });
@@ -51,9 +59,9 @@ class Palette {
         this.cleanCanvas();
       }
     });
-    document.querySelector('#clean').addEventListener('mousedown', (event) => {
+    document.querySelector('#clean').addEventListener('mousedown', () => {
       this.cleanCanvas();
-    });    
+    });
     window.onbeforeunload = () => {
       this.saveLocalStorage();
     };
@@ -349,15 +357,27 @@ class Palette {
   }
 
   saveLocalStorage() {
-    if (localStorage.getItem('paletteLayout')) {
+    if (localStorage.getItem('state')) {
       localStorage.removeItem('paletteLayout');
+      localStorage.removeItem('state');
+      const state = {
+        mode: this.mode,
+        currentColor: this.currentColor,
+        prevColor: this.prevColor,
+      };
       localStorage.setItem('paletteLayout', this.canvas.toDataURL());
+      localStorage.setItem('state', JSON.stringify(state));
     } else {
-      localStorage.setItem('paletteLayout', this.canvas.toDataURL());
+      const state = {
+        mode: this.mode,
+        currentColor: this.currentColor,
+        prevColor: this.prevColor,
+      };
+      localStorage.setItem('state', JSON.stringify(state));
     }
   }
 
-  cleanCanvas() {    
+  cleanCanvas() {
     this.ctx.clearRect(0, 0, this.scale, this.scale);
   }
 }
