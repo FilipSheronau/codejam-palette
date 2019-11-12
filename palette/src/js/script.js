@@ -97,11 +97,13 @@ class Palette {
 
   // input color
   inputColor() {
-    this.prevColor = this.currentColor;
-    this.currentColor = document.getElementById('inp-color').value;
-    document.querySelector('#current-color i').style.color = this.currentColor;
-    document.querySelector('#prev-color i').style.color = this.prevColor;
-    this.ctx.fillStyle = this.currentColor;
+    if (this.currentColor !== document.getElementById('inp-color').value) {
+      this.prevColor = this.currentColor;
+      this.currentColor = document.getElementById('inp-color').value;
+      document.querySelector('#current-color i').style.color = this.currentColor;
+      document.querySelector('#prev-color i').style.color = this.prevColor;
+      this.ctx.fillStyle = this.currentColor;
+    }
   }
 
   // toggle color
@@ -116,19 +118,23 @@ class Palette {
       this.ctx.fillStyle = this.currentColor;
       document.getElementById('inp-color').value = this.currentColor;
     } else if (idData === 'red-color') {
-      this.prevColor = this.currentColor;
-      this.currentColor = '#ff0000';
-      document.querySelector('#current-color i').style.color = this.currentColor;
-      document.querySelector('#prev-color i').style.color = this.prevColor;
-      this.ctx.fillStyle = this.currentColor;
-      document.getElementById('inp-color').value = this.currentColor;
+      if (this.currentColor !== '#ff0000') {
+        this.prevColor = this.currentColor;
+        this.currentColor = '#ff0000';
+        document.querySelector('#current-color i').style.color = this.currentColor;
+        document.querySelector('#prev-color i').style.color = this.prevColor;
+        this.ctx.fillStyle = this.currentColor;
+        document.getElementById('inp-color').value = this.currentColor;
+      }
     } else if (idData === 'blue-color') {
-      this.prevColor = this.currentColor;
-      this.currentColor = '#0000ff';
-      document.querySelector('#current-color i').style.color = this.currentColor;
-      document.querySelector('#prev-color i').style.color = this.prevColor;
-      this.ctx.fillStyle = this.currentColor;
-      document.getElementById('inp-color').value = this.currentColor;
+      if (this.currentColor !== '#0000ff') {
+        this.prevColor = this.currentColor;
+        this.currentColor = '#0000ff';
+        document.querySelector('#current-color i').style.color = this.currentColor;
+        document.querySelector('#prev-color i').style.color = this.prevColor;
+        this.ctx.fillStyle = this.currentColor;
+        document.getElementById('inp-color').value = this.currentColor;
+      }
     }
   }
 
