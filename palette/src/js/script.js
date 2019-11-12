@@ -189,7 +189,6 @@ class Palette {
     }
   }
 
-  // fill a closed area after mousemove
   fillArea(data) {
     this.busy = true;
     const startX = this.getCoords(data).left;
@@ -198,12 +197,23 @@ class Palette {
     const dstImg = this.ctx.getImageData(0, 0, this.scale, this.scale);
     const dstData = dstImg.data;
     const startPos = this.getPixelPos(startX, startY);
-    const startColor = {
+    let startColor = {
       r: dstData[startPos],
       g: dstData[startPos + 1],
       b: dstData[startPos + 2],
       a: dstData[startPos + 3],
     };
+    if (fillColor.r === startColor.r
+      && fillColor.g === startColor.g
+      && fillColor.b === startColor.b
+    ) {
+      startColor = {
+        r: 0,
+        g: 0,
+        b: 0,
+        a: 0,
+      };
+    }
     const todo = [[startX, startY]];
     while (todo.length) {
       const pos = todo.pop();
@@ -254,11 +264,16 @@ class Palette {
     let r = data.r.toString(16);
     let g = data.g.toString(16);
     let b = data.b.toString(16);
-    let a = Math.round(data.a * 255).toString(16);
-    if (r.length === 1) r = `0${r}`;
-    if (g.length === 1) g = `0${g}`;
-    if (b.length === 1) b = `0${b}`;
-    if (a.length === 1) a = `0${a}`;
+    const { a } = data;
+    if (a === 0) {
+      r = 'ff';
+      g = 'ff';
+      b = 'ff';
+    } else {
+      if (r.length === 1) r = `0${r}`;
+      if (g.length === 1) g = `0${g}`;
+      if (b.length === 1) b = `0${b}`;
+    }
     return `#${r}${g}${b}`;
   }
 
@@ -275,6 +290,8 @@ class Palette {
       a: dstData[startPos + 3],
     };
     const newColor = Palette.rgbToHex(startColor);
+    console.log(startColor);
+    console.log(newColor);
     this.prevColor = this.currentColor;
     this.currentColor = newColor;
     document.querySelector('#current-color i').style.color = this.currentColor;
