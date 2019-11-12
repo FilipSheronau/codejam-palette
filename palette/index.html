@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="./dist/css/style.css">  
+  <title>CodeJam-Canvas</title>
+</head>
+<body>
+  <div class="main-wrapper">
+    <header>
+      <nav class="top-menu">
+        <div class="container nav-wrapper">        
+          <h5>codejam-palette</h5>
+        </div>      
+      </nav>
+    </header>    
+    <main>
+      <ul class="collection left-menu card">
+        <li class="collection-item active" id="pensil"><i class="Tiny material-icons">create</i>Pensil</li>
+        <li class="collection-item" id="fill"><i class="Tiny material-icons">format_color_fill</i>Fill</li>
+        <li class="collection-item" id="choose-color"><i class="Tiny material-icons">colorize</i>Choose color</li>        
+      </ul>
+      <ul class="collection left-bottom-menu card">         
+          <li class="collection-item" id="current-color">
+            <input type="color" name="current-color" id="inp-color">
+            <label for="inp-color"><i class="Tiny material-icons">fiber_manual_record</i>Current color</label>
+          </li>
+          <li class="collection-item" id="prev-color"><i class="Tiny material-icons">fiber_manual_record</i>Prev color</li>
+          <li class="collection-item" id="red-color"><i class="Tiny material-icons">fiber_manual_record</i>Red</li>
+          <li class="collection-item" id="blue-color"><i class="Tiny material-icons">fiber_manual_record</i>Blue</li>
+          <li class="collection-item" id="clean"><i class="Tiny material-icons">delete</i>Clean layout</li>
+        </ul>
+        <div class="palete-pal card">
+          <canvas id="canvas" width="32" height="32"></canvas>
+        </div>        
+    </main>
+    <footer>
+
+    </footer>
+  </div>
+  <div class="content"></div>
+  <script src="./dist/js/bundle.js"></script>
+</body>
+</html>
